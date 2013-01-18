@@ -21,7 +21,9 @@ Also, ModalFactory interprets the second called back property of an HtmlControll
 
 The wrapper is called via `Sauron.createController('ModalFactory', 'controllerName', {'options': 'for controller'}, callback);`.
 
-The `modal` dependency is jqModal http://dev.iceburg.net/jquery/jqModal
+This has an external dependency on [jqModal][jqModal] (namespaced `modal`).
+
+[jqModal]: http://dev.iceburg.net/jquery/jqModal
 
 #### Sandbox
 pages/sandbox.html is a development page for controllers. Since every controller is a module inside of Halo, we can load an individual one with the entire page as its container.
@@ -29,6 +31,14 @@ pages/sandbox.html is a development page for controllers. Since every controller
 Sandbox provides a set of input boxes which are `eval`d to provide parameters for your controller and it has a [Health Watcher][healthWatcher] built in for your use.
 
 [healthWatcher]: https://gist.github.com/4049879
+
+#### Model mixins
+models/CrudModel has the `persist` mixin which present the same API as the `memory` mixin. However, this will retain data across browser sessions. It has an external dependency on [kizzy][kizzy].
+
+[kizzy]: https://github.com/ded/Kizzy
+
+#### Controller mixins
+controllers/HtmlController presents a bunch of bindings for navigation and lists. These were abstracted above implementation specific but still require a specific data format to use properly.
 
 ### Optimization
 public/js/all.json + utils/jsRender.js - jsRender reads in the settings from all.json, reads in files from `public/js`, namespaces their defines, and writes them to `dist/js/all.js`.
