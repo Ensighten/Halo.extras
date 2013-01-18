@@ -1,6 +1,6 @@
 # Halo.extras
 
-Collection of unpolished and non-critical items for [Halo][halo].
+Collection of plugins and utilities for [Halo][halo].
 
 [Halo][halo] is a client-side MVC framework based on Addy Osmani's Aura.
 
