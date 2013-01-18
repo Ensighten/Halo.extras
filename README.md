@@ -21,7 +21,14 @@ Also, ModalFactory interprets the second called back property of an HtmlControll
 
 The wrapper is called via `Sauron.createController('ModalFactory', 'controllerName', {'options': 'for controller'}, callback);`.
 
+The `modal` dependency is jqModal http://dev.iceburg.net/jquery/jqModal
+
 #### Sandbox
+pages/sandbox.html is a development page for controllers. Since every controller is a module inside of Halo, we can load an individual one with the entire page as its container.
+
+Sandbox provides a set of input boxes which are `eval`d to provide parameters for your controller and it has a [Health Watcher][healthWatcher] built in for your use.
+
+[healthWatcher]: https://gist.github.com/4049879
 
 ### Optimization
 public/js/all.json + utils/jsRender.js - jsRender reads in the settings from all.json, reads in files from `public/js`, namespaces their defines, and writes them to `dist/js/all.js`.

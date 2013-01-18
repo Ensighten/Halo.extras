@@ -1,0 +1,233 @@
+<div id="SANDBOX_container">
+  <div>
+    <label for="SANDBOX_baseController">Base controller: </label>
+    <input id="SANDBOX_baseController" name="SANDBOX_baseController" class="fancyDefault" type="text" value="index"/>
+    <button id="SANDBOX_loadController">Load</button>
+  </div>
+  <div class="generator">
+    Controller params (these will be eval'd):
+    <div class="generatorRow generatorRowBase">
+      <input type="text" value="function () { console.log('cb', arguments); }" style="width: 70%;"/>
+      <button class="generatorBtnRemove">-</button>
+      <button class="generatorBtnAdd">+</button>
+    </div>
+  </div>
+</div>
+<script>
+require(['all'], function () {
+require(['Builder'], function (Builder) {
+  var $ = Builder.$,
+      $baseController = $('#SANDBOX_baseController'),
+      $container = $('#SANDBOX_container'),
+      $loadBtn = $('#SANDBOX_loadController'),
+      waitSeconds = require.s.contexts._.config.waitSeconds;
+
+  // Instantiate the UI elements
+  $('.fancyDefault').fancyDefault();
+  $('.generator').generator();
+
+  // Function to load the controller
+  function loadController() {
+    // Grab the controller and its params
+    var controllerName = getController(),
+        controllerParams = getControllerParams();
+
+    // Empty our container node
+    $container.empty();
+
+    // Add loading text
+    $container.html('<h1 style="font-size: 2em; font-weight: bold;">Loading...</h1>');
+
+    // Set up a timer in case of failure
+    var failTimeout = setTimeout(handleFailure, waitSeconds * 1e3);
+
+    // Load the requested base controller (with the body as its playground)
+    require(['Sauron', 'mvc!m/session'], function (Sauron) {
+      // Clear the timeout
+      clearTimeout(failTimeout);
+
+      // Remove the container
+      $container.remove();
+
+      // Retrieve the session (if possible)
+      Sauron.model('session').retrieve(function () {
+        // and start the controller
+        require(['mvc!c/' + controllerName], function () {
+          // TODO: Initialize with items in generator
+          var startFn = Sauron.controller(controllerName).start;
+              args = [document.body];
+          args.push.apply(args, controllerParams);
+          console.log('Invoking with: ', controllerParams);
+          startFn.apply(Sauron.controller(controllerName), args);
+        });
+      });
+    });
+  }
+
+  // Function to handle a failure
+  function handleFailure() {
+    var p = document.createElement('p'),
+        reloadButton = document.createElement('button'),
+        reloadCount = 3;
+
+    // Create very formal notice
+    p.innerHTML = 'The controller ' + controllerName + ' has failed to load within ' + waitSeconds + ' seconds.<br/>Please reload the page and try again.<br/>The page will reload in <span>' + reloadCount + '</span> seconds or you can click the button below.';
+    // Laziness set in below
+    var reloadSpan = p.getElementsByTagName('span')[0];
+
+    // Every one second
+    setInterval(function () {
+      // Decrement reload count and update span
+      reloadCount -= 1;
+      reloadSpan.innerHTML = reloadCount;
+
+      // If it is time to reload, then reload
+      if (reloadCount < 1) {
+        location.reload();
+      }
+    }, 1e3);
+
+    // Create not-so formal button
+    reloadButton.innerHTML = 'RELOAD THE PAGE!!!';
+    reloadButton.setAttribute('style', 'padding: 2em; font-size: 2em; font-weight: bold; cursor: pointer;');
+    reloadButton.onclick = function () {
+      location.reload();
+    };
+
+    // Remove the loading span
+    $container.empty();
+
+    // Append items to body
+    $container.append(p);
+    $container.append(reloadButton);
+  }
+
+  // When the 'load' button is clicked, save the controller to the query param (which should cause a redirect). If not, loadController
+  $loadBtn.on('click', function () {
+    // Get the current controller name
+    var controllerName = $baseController.val();
+
+    // Save it to the window
+    var queryStr = '?controller=' + controllerName,
+        controllerParams = [].slice.call(getControllerParamsFromField());
+    window.location += queryStr + '&params=' + JSON.stringify(controllerParams);
+
+    setTimeout(loadController, 1000);
+  });
+
+  // If there is a controller in the URL, load controller
+  if (getControllerFromUrl()) {
+    loadController();
+  }
+
+  function getControllerFromUrl() {
+    var retVal = null;
+
+    // Attempt to collect the controller from the URL
+    var queryString = window.location.search;
+    // If there is a query string
+    if (queryString !== '') {
+      // Then, if a controller is specified
+      var controllerNameArr = queryString.match(/(?:\?|&)controller=([^&#$]*)/);
+      if (controllerNameArr) {
+        // Save the controller to the input field
+        retVal = controllerNameArr[1];
+      }
+    }
+
+    return retVal;
+  }
+
+  function getControllerFromField() {
+    return $baseController.val();
+  }
+
+  function getController() {
+    // Collect from the field first
+    var retVal = getControllerFromField(),
+        urlController = getControllerFromUrl();
+
+    // Then attempt to retrieve from the URL
+    if (urlController) {
+      retVal = urlController;
+    }
+
+    // Return the retVal
+    return retVal;
+  }
+
+  function getControllerParamsFromField() {
+    var $generatorRows = $('.generatorRow'),
+        $generatorInputs = $generatorRows.find('input'),
+        retArr = $generatorInputs.map(function () { return this.value; });
+    return retArr;
+  }
+
+  function getControllerParams() {
+    // First grab them from the fields
+    var retArr = getControllerParamsFromField();
+
+    // Then attempt to grab from the URL
+    // Attempt to collect the controller from the URL
+    var queryString = window.location.search;
+    // If there is a query string
+    if (queryString !== '') {
+      // Then, if a controller is specified
+      var paramsArr = queryString.match(/(?:\?|&)params=([^&#$]*)/);
+      if (paramsArr) {
+        // Save the params to the input field
+        retArr = JSON.parse(unescape(paramsArr[1]));
+      }
+    }
+
+    // Eval each of the parameters
+    // jQuery.map does bad things when you return single element arrays
+    retArr = retArr.map(function (item) {
+      var fn = new Function('return ' + item + ';'),
+          retVal = fn();
+      return retVal;
+    });
+
+    // Return the inputs
+    return retArr;
+  }
+});
+
+// File-Watcher lite =P
+require(['jquery'], function ($) {
+  // Grab the current pid
+  $.get('/health', function (health) {
+    var pid = health.pid;
+
+    // Watch the health to see if it changes
+    setInterval(function () {
+      // If it does, refresh the page
+      $.get('/health', function (health) {
+        if (health.pid !== pid) {
+          location.reload();
+        }
+      });
+    }, 1e3);
+  });
+
+  // Re-grab the CSS now too
+  $('link[rel="stylesheet"]').each(function () {
+    var stylesheet = this,
+        href = stylesheet.href;
+    $.get(href, function (origCSS) {
+      // Watch the health to see if it changes
+      setInterval(function () {
+        // If it does, reload the CSS
+        $.get(href, function (css) {
+          if (origCSS !== css) {
+            var href = stylesheet.href;
+            stylesheet.href += href.indexOf('?') > -1 ? '1' : '?1';
+            origCSS = css;
+          }
+        });
+      }, 1e3);
+    });
+  });
+});
+});
+</script>
