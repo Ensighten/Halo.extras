@@ -14,6 +14,8 @@ Collection of unpolished and non-critical items for [Halo][halo].
 ### Optimization
 public/js/all.json + utils/jsRender.js - jsRender reads in the settings from all.json, reads in files from `public/js`, namespaces their defines, and writes them to `dist/js/all.js`.
 
+routes/mvc.js + routes/mvc.json - Collect MVC files into HTML documents based on groupings/permissioning specified within `routes/mvc.json`.
+
 ### public/js
 arrayTree - Data structure for storing generating arrays of items under the respective same keys.
 

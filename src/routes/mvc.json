@@ -1,0 +1,24 @@
+{
+  "index": {
+    "_comment1": "Files will automatically be found by searching each of the models, views, and controllers directories.",
+    "_comment2": "No enforcement is made via mvc!",
+    "_comment3": "mvc! acts as a comment to delimit if the item is a model, view, or controller.",
+    "permissions": [],
+    "files": [
+      "BaseController",
+      "HtmlController",
+      "c!index",
+      "login"
+    ]
+  },
+  "main": {
+    "permissions": [
+      "isLoggedIn"
+    ],
+    "files": [
+      "main",
+      "main/nav",
+      "m!user"
+    ]
+  }
+}
