@@ -1,0 +1,8 @@
+{
+  "include": ["*"],
+  "paths": {
+    "moduleName": "fileName"
+  },
+  "exclude": ["files.js", "to.js", "exclude.js", "from.js", "grouping.js"],
+  "skipDefine": ["skip.js", "define.on.js", "these.files.js"]
+}
