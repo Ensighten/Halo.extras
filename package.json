@@ -1,6 +1,6 @@
 {
   "name": "Halo.extras",
-  "description": "Collection of unpolished and non-critical items for Halo.",
+  "description": "Collection of plugins and utilities for Halo, a client-side MVC framework.",
   "version": "0.1.0",
   "homepage": "https://github.com/Ensighten/Halo.extras",
   "author": {
