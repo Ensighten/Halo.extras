@@ -11,6 +11,18 @@ Collection of unpolished and non-critical items for [Halo][halo].
 2. Select and download the files you want.
 
 ## Documentation
+### Halo extras
+#### ModalFactory
+controllers/ModalFactory.js is wrapper for HtmlController which takes returned content and places inside of a modal.
+
+Modals have customizable containers which can be modified via `Sauron.voice('modal/update', params)` or `Sauron.voice('modal/{{option}}', 'value');`.
+
+Also, ModalFactory interprets the second called back property of an HtmlController as the modal options.
+
+The wrapper is called via `Sauron.createController('ModalFactory', 'controllerName', {'options': 'for controller'}, callback);`.
+
+#### Sandbox
+
 ### Optimization
 public/js/all.json + utils/jsRender.js - jsRender reads in the settings from all.json, reads in files from `public/js`, namespaces their defines, and writes them to `dist/js/all.js`.
 
