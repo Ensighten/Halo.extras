@@ -45,6 +45,8 @@ public/js/all.json + utils/jsRender.js - jsRender reads in the settings from all
 
 routes/mvc.js + routes/mvc.json - Collect MVC files into HTML documents based on groupings/permissioning specified within `routes/mvc.json`.
 
+public/js/mvc.js - `mvc.js` from Halo with grouping handler for the files created by `routes/mvc.js + routes/mvc.json`. The handler is accessible via `mvc!g/name` and breaks up `<script>`s to interprets each one as a model, view, or controller.
+
 ### public/js
 arrayTree - Data structure for storing generating arrays of items under the respective same keys.
 
