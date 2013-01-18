@@ -1,0 +1,42 @@
+{
+  "name": "Halo.extras",
+  "description": "Collection of unpolished and non-critical items for Halo.",
+  "version": "0.1.0",
+  "homepage": "https://github.com/Ensighten/Halo.extras",
+  "author": {
+    "name": "Ensighten",
+    "email": "support@ensighten.com",
+    "url": "https://www.ensighten.com/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/Ensighten/Halo.extras.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Ensighten/Halo.extras/issues"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/Ensighten/Halo.extras/blob/master/LICENSE-MIT"
+    }
+  ],
+  "main": "lib/Halo.extras",
+  "engines": {
+    "node": ">= 0.6.0"
+  },
+  "scripts": {
+    "test": "grunt test"
+  },
+  "devDependencies": {
+    "grunt": "~0.3.17"
+  },
+  "keywords": [
+    "halo",
+    "extra",
+    "extras",
+    "mvc",
+    "plugin",
+    "widget"
+  ]
+}
